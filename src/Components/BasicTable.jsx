@@ -2,7 +2,7 @@ import { useTable } from "@tanstack/react-table";
 
 const BasicTable = () => {
     
-    /***  */
+    /*** @type import("@tanstack/react-table").columnDef<any>*/
   const columns = [
     {
       Header: "S/N",
