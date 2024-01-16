@@ -1,4 +1,4 @@
-
+import { useReactTable, getCoreRowModel, flexRender} from "@tanstack/react-table"
 
 
 const BasicTable = () => {
