@@ -1,26 +1,28 @@
 import { useTable } from "@tanstack/react-table";
 
 const BasicTable = () => {
+    
+    /***  */
   const columns = [
     {
       Header: "S/N",
-      accessor: "s/n",
+      accessorKey: "s/n",
     },
     {
       Header: "Staff Name",
-      accessor: "staff name",
+      accessorKey: "staff name",
     },
     {
       Header: "Purchase Request Number",
-      accessor: "purchase request number",
+      accessorKey: "purchase request number",
     },
     {
       Header: "Amount",
-      accessor: "amount",
+      accessorKey: "amount",
     },
     {
       Header: "Status",
-      accessor: "status",
+      accessorKey: "status",
     },
   ];
 
