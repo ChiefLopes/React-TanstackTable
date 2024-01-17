@@ -1,72 +1,81 @@
-import { useTable } from "@tanstack/react-table";
+import { useReactTable } from "@tanstack/react-table";
 
 const BasicTable = () => {
-    
-    /*** @type import("@tanstack/react-table").columnDef<any>*/
+  const prepareRow = (row) => {
+    // Format the "amount" column as currency
+    row.values.amount = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(row.values.amount);
+
+    // Highlight "Pending" rows in red
+    row.className = row.values.status === "Pending" ? "pending-row" : "";
+  };
+
   const columns = [
+    { Header: "S/N", accessor: "id" },
+    { Header: "Staff Name", accessor: "staffName" },
+    { Header: "Purchase Request Number", accessor: "purchaseRequestNumber" },
+    { Header: "Amount", accessor: "amount" },
+    { Header: "Status", accessor: "status" },
     {
-      Header: "S/N",
-      accessorKey: "s/n",
-    },
-    {
-      Header: "Staff Name",
-      accessorKey: "staff name",
-    },
-    {
-      Header: "Purchase Request Number",
-      accessorKey: "purchase request number",
-    },
-    {
-      Header: "Amount",
-      accessorKey: "amount",
-    },
-    {
-      Header: "Status",
-      accessorKey: "status",
+      Header: "View",
+      accessor: "id",
+    //   Cell: ({ row }) => (
+    //     <button onClick={() => handleView(row.original)}>View</button>
+    //   ),
     },
   ];
 
   const data = [
     {
-      "s/n": 1,
-      "staff name": "John Doe",
-      "purchase request number": "PR123",
+      id: 1,
+      staffName: "John Doe",
+      purchaseRequestNumber: "PR123",
       amount: 100,
       status: "Pending",
+    },
+    {
+      id: 2,
+      staffName: "Jane Doe",
+      purchaseRequestNumber: "PR456",
+      amount: 250,
+      status: "Approved",
     },
     // Add more data as needed
   ];
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const tableInstance = useReactTable({ columns, data });
+
+  const handleView = (row) => {
+    alert(`Viewing details for purchase request #${row.purchaseRequestNumber}`);
+  };
 
   return (
     <div className="ml-3">
-      <table {...getTableProps()}>
+      <table {...tableInstance.getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
+          {tableInstance.headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()} key={column.id}>
-                  {column.render("Header")}
+                  {column.render("Header")} 1
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} key={row.id}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} key={cell.id}>
-                    {cell.render("Cell")}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
+
+        <tbody {...tableInstance.getTableBodyProps()}>
+          {tableInstance.rows.map((row) => (
+            <tr {...row.getRowProps()} key={row.id}>
+              {row.cells.map((cell) => (
+                <td {...cell.getCellProps()} key={cell.id}>
+                  {cell.render("Cell", { row })}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
